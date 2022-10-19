@@ -1,16 +1,21 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:myapp/screens/authentication_screens/shopping_verify_otp_sigup_screen.dart';
+import 'package:myapp/services/firestore_service/seller_detail.dart';
 import 'package:myapp/widget/our_flutter_toast.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../../controller/dashboard_controller.dart';
 import '../../controller/login_controller.dart';
 import '../../controller/login_controller.dart';
 import '../../db/db_helper.dart';
+import '../../models/user_model.dart';
 import '../../screens/authentication_screens/shopping_verify_otp_login_screen.dart';
+import '../addImages/profile_image..dart';
 import '../firestore_service/userprofile_detail.dart';
 
 class PhoneAuth {
@@ -176,5 +181,90 @@ class PhoneAuth {
     await FirebaseAuth.instance.signOut();
     Get.find<DashboardController>().changeIndexs(0);
     await Hive.box<int>(DatabaseHelper.outerlayerDB).put("state", 1);
+  }
+}
+
+class Auth {
+  createAccount(UserModel userModel, File file, BuildContext context) async {
+    Get.find<LoginController>().toggle(true);
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: userModel.email,
+        password: userModel.password,
+      )
+          .then((value) async {
+        String? url = await AddProfile().uploadImage(file);
+        //
+        SellerFireStore().addSeller(
+          userModel,
+          url!,
+          context,
+        );
+        OurToast().showSuccessToast("User signed successfully");
+      });
+    } on FirebaseAuthException catch (e) {
+      Get.find<LoginController>().toggle(false);
+
+      OurToast().showErrorToast(e.message!);
+    }
+  }
+   loginAccount(String email, String password) async {
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((value) async {
+          Get.find<LoginController>().toggle(false);
+
+          OurToast().showSuccessToast("User logged in successfully");
+          // Get.off(
+          //   const DashBoardScreen(),
+          // );
+
+          await Hive.box<int>(DatabaseHelper.outerlayerDB).put("state", 2);
+        });
+      } on FirebaseAuthException catch (e) {
+        Get.find<LoginController>().toggle(false);
+
+        OurToast().showErrorToast(e.message!);
+      }
+    }
+
+  logout() async {
+    try {
+      FirebaseFirestore.instance
+          .collection("Sellers")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "token": "",
+      });
+      await FirebaseAuth.instance.signOut().then((value) async {
+        Get.find<DashboardController>().changeIndexs(0);
+        await Hive.box<int>(DatabaseHelper.outerlayerDB).put("state", 1);
+      });
+    } on FirebaseAuthException catch (e) {
+      Get.find<LoginController>().toggle(false);
+
+      OurToast().showErrorToast(e.message!);
+    }
+
+   
+
+    // logout() async {
+    //   try {
+    //     await FirebaseAuth.instance.signOut().then((value) {
+    //       OurToast().showSuccessToast("User logged out successfully");
+    //       Hive.box<int>(authenticationDB).put("state", 0);
+    //       Get.off(
+    //         const LoginScreen(),
+    //       );
+    //       Get.find<AuthenticationController>().toggle(false);
+    //     });
+    //   } on FirebaseAuthException catch (e) {
+    //     Get.find<AuthenticationController>().toggle(false);
+
+    //     OurToast().showErrorToast(e.message!);
+    //   }
+    // }
   }
 }

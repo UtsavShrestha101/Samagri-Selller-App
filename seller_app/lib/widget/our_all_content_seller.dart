@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:myapp/models/product_model.dart';
@@ -9,15 +10,15 @@ import '../utils/color.dart';
 import 'our_product_grid_loading_widget.dart';
 import 'our_product_grid_tile.dart';
 
-class OurAllContext extends StatefulWidget {
+class OurAllSellerContext extends StatefulWidget {
   final String category;
-  const OurAllContext({Key? key, required this.category}) : super(key: key);
+  const OurAllSellerContext({Key? key, required this.category}) : super(key: key);
 
   @override
-  State<OurAllContext> createState() => _OurAllContextState();
+  State<OurAllSellerContext> createState() => _OurAllSellerContextState();
 }
 
-class _OurAllContextState extends State<OurAllContext> {
+class _OurAllSellerContextState extends State<OurAllSellerContext> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +41,7 @@ class _OurAllContextState extends State<OurAllContext> {
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection("All")
+                .where("ownerUid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                 .where(
                   "category",
                   arrayContains: widget.category,

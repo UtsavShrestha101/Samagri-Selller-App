@@ -167,7 +167,8 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                                     fontWeight: 600,
                                                   ),
                                                   FxText.sh1(
-                                                    "Rs.  ${firebaseUserModel.currentCartPrice}",
+                                                    // "Rs.  ${firebaseUserModel.currentCartPrice}",
+                                                    "Ass",
                                                     fontWeight: 600,
                                                   ),
                                                 ],
@@ -202,7 +203,8 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                                     FxText.sh1("Total",
                                                         fontWeight: 700),
                                                     FxText.sh1(
-                                                        "Rs.  ${firebaseUserModel.currentCartPrice + 60}",
+                                                      "aa",
+                                                        // "Rs.  ${firebaseUserModel.currentCartPrice + 60}",
                                                         fontWeight: 800),
                                                   ],
                                                 ),
@@ -261,9 +263,10 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                       PageTransition(
                                         type: PageTransitionType.leftToRight,
                                         child: ShoppingCheckOutScreen(
-                                          totalPrice: firebaseUserModel
-                                                  .currentCartPrice +
-                                              60,
+                                          totalPrice: 111,
+                                          // firebaseUserModel
+                                          //         .currentCartPrice +
+                                          //     60,
                                         ),
                                       ),
                                     );

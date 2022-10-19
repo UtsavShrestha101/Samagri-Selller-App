@@ -31,12 +31,17 @@ class ShoppingLoginScreen extends StatefulWidget {
 }
 
 class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
-  TextEditingController _phone_number_controller = TextEditingController();
+  TextEditingController _email_controller = TextEditingController();
+  TextEditingController _password_controller = TextEditingController();
+  FocusNode _email_node = FocusNode();
+  FocusNode _password_node = FocusNode();
   @override
   void dispose() {
     // TODO: implement dispose
-    _phone_number_controller.clear();
-    _phone_number_controller.dispose();
+    _email_controller.clear();
+    _email_controller.dispose();
+    _password_controller.clear();
+    _password_controller.dispose();
     super.dispose();
   }
 
@@ -71,7 +76,7 @@ class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
                         ),
                         OurSizedBox(),
                         Text(
-                          "Samagri",
+                          "Samagri-Seller",
                           style: TextStyle(
                             fontSize: ScreenUtil().setSp(27.5),
                             color: darklogoColor,
@@ -82,12 +87,25 @@ class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
                         OurSizedBox(),
                         OurSizedBox(),
                         CustomTextField(
-                            letterlength: 10,
-                            controller: _phone_number_controller,
-                            validator: (value) {},
-                            title: "Enter your phone no.",
-                            type: TextInputType.phone,
-                            number: 1),
+                          start: _email_node,
+                          end: _password_node,
+                          letterlength: 1000,
+                          controller: _email_controller,
+                          validator: (value) {},
+                          title: "Email",
+                          type: TextInputType.emailAddress,
+                          number: 0,
+                        ),
+                        // OurSizedBox(),
+                        CustomTextField(
+                          start: _password_node,
+                          letterlength: 1000,
+                          controller: _password_controller,
+                          validator: (value) {},
+                          title: "Password",
+                          type: TextInputType.name,
+                          number: 1,
+                        ),
                         OurSizedBox(),
                         Container(
                           height: ScreenUtil().setSp(40),
@@ -98,9 +116,8 @@ class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
                           child: OurElevatedButton(
                             title: "Continue",
                             function: () async {
-                              if (_phone_number_controller.text
-                                  .trim()
-                                  .isEmpty) {
+                              if (_email_controller.text.trim().isEmpty ||
+                                  _password_controller.text.trim().isEmpty) {
                                 OurToast()
                                     .showErrorToast("Field can't be empty");
                               } else {
@@ -115,9 +132,14 @@ class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
                                 print("==========");
                                 print("==========");
                                 print("==========");
-                                await PhoneAuth().sendLoginOTP(
-                                  _phone_number_controller.text.trim(),
-                                  context,
+                                // await PhoneAuth().sendLoginOTP(
+                                //   _phone_number_controller.text.trim(),
+                                //   context,
+                                // );
+                                Get.find<LoginController>().toggle(false);
+                                Auth().loginAccount(
+                                  _email_controller.text.trim(),
+                                  _password_controller.text.trim(),
                                 );
                               }
                             },

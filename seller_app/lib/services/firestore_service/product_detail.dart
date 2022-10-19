@@ -31,9 +31,16 @@ class ProductDetailFirestore {
       );
     }
     String uid = const Uuid().v4();
+    var abc = await FirebaseFirestore.instance
+        .collection("Sellers")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    print(abc["name"]);
+    // print("Utsav Shrestha1");
     try {
       await FirebaseFirestore.instance.collection("All").doc(uid).set({
         "uid": uid,
+        "ownerUid": FirebaseAuth.instance.currentUser!.uid,
         "name": name,
         "desc": desc,
         "price": price,
@@ -51,7 +58,7 @@ class ProductDetailFirestore {
           "All",
           categoryItem,
         ],
-        "shop_name": "Shop123"
+        "shop_name": abc["name"]
       }).then((value) {
         Get.find<DashboardController>().changeIndexs(0);
         OurToast().showSuccessToast("Product added");
@@ -118,9 +125,9 @@ class ProductDetailFirestore {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
         "cartItems": FieldValue.arrayUnion([product.uid]),
-        "cartItemNo": firebaseUserModel.cartItemNo + 1,
-        "currentCartPrice":
-            firebaseUserModel.currentCartPrice + product.price * quantity
+        // "cartItemNo": firebaseUserModel.cartItemNo + 1,
+        // "currentCartPrice":
+        //     firebaseUserModel.currentCartPrice + product.price * quantity
       }).then((value) async {
         await FirebaseFirestore.instance
             .collection("Carts")
@@ -236,7 +243,7 @@ class ProductDetailFirestore {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
         "cartItems": FieldValue.arrayRemove([product.uid]),
-        "cartItemNo": firebaseUserModel.cartItemNo - 1,
+        // "cartItemNo": firebaseUserModel.cartItemNo - 1,
       }).then((value) async {
         var abc = await FirebaseFirestore.instance
             .collection("Carts")
@@ -249,8 +256,8 @@ class ProductDetailFirestore {
             .collection("Users")
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .update({
-          "currentCartPrice": firebaseUserModel.currentCartPrice -
-              cartProductModel.price * cartProductModel.quantity,
+          "currentCartPrice":
+              111 - cartProductModel.price * cartProductModel.quantity,
         });
         try {
           await FirebaseFirestore.instance

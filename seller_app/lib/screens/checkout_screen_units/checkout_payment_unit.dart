@@ -331,7 +331,7 @@ class _CheckOutPaymentScreenState extends State<CheckOutPaymentScreen> {
                   config: PaymentConfig(
                     amount: widget.totalPrice.toInt() * 100,
                     productIdentity: uid,
-                    productName: 'Samagri TrackingID -$uid',
+                    productName: 'Samagri-Seller TrackingID -$uid',
                   ),
                   preferences: [
                     PaymentPreference.khalti,
@@ -396,7 +396,7 @@ class _CheckOutPaymentScreenState extends State<CheckOutPaymentScreen> {
 
                 // ESewaPayment _payment = ESewaPayment(
                 //     amount: widget.totalPrice,
-                //     productName: 'Samagri TrackingID -$uid',
+                //     productName: 'Samagri-Seller TrackingID -$uid',
                 //     productID: uid,
                 //     callBackURL: "http://example.com");
                 // try {

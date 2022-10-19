@@ -11,12 +11,9 @@ class FirebaseUserModel {
   final String imageUrl;
   final String phone;
   final String location;
-  final int cartItemNo;
-  final double currentCartPrice;
-  final List cartItems;
+  
 
   FirebaseUserModel({
-    required this.currentCartPrice,
     required this.uid,
     required this.email,
     required this.name,
@@ -25,8 +22,7 @@ class FirebaseUserModel {
     required this.imageUrl,
     required this.phone,
     required this.location,
-    required this.cartItems,
-    required this.cartItemNo,
+   
   });
 
   Map<String, dynamic> toMap() {
@@ -39,9 +35,7 @@ class FirebaseUserModel {
       'imageUrl': imageUrl,
       'phone': phone,
       'Location': location,
-      'cartItem': cartItems,
-      'cartItemNo': cartItemNo,
-      'currentCartPrice': currentCartPrice
+      
     };
   }
 
@@ -55,9 +49,7 @@ class FirebaseUserModel {
       imageUrl: map['imageUrl'] ?? '',
       phone: map['phone'] ?? '',
       location: map['location'] ?? '',
-      cartItems: List.from(map['cartItems']),
-      cartItemNo: map['cartItemNo'] ?? 0,
-      currentCartPrice: map['currentCartPrice'] ?? 0.0,
+     
     );
   }
 }

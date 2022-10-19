@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_intro/flutter_intro.dart';
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             builder: (child, Widget) {
               return GetMaterialApp(
                 navigatorKey: navigatorKey,
-                title: "Samagri",
+                title: "Samagri-Seller",
                 supportedLocales: const [
                   Locale('en', 'US'),
                   Locale('ne', 'NP'),

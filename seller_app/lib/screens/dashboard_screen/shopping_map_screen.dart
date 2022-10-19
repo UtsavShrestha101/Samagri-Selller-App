@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:myapp/controller/login_location_controller.dart';
 import 'package:myapp/models/get_address_model.dart';
 import 'package:myapp/services/firestore_service/location_detail.dart';
 import 'package:myapp/utils/color.dart';
@@ -76,6 +77,11 @@ class ShopMapScreenState extends State<ShopMapScreen> {
         _shortName =
             response['results'][0]['address_components'][1]['long_name'];
       });
+      Get.find<LoginLocationController>().changeLocation(
+        _currentAddress,
+        location!.latitude,
+        location.longitude,
+      );
     } catch (e) {
       print(e);
     }

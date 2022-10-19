@@ -47,9 +47,9 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             OurSizedBox(),
             Hero(
-              tag: "Samagri",
+              tag: "Samagri-Seller",
               child: Text(
-                "Samagri",
+                "Samagri-Seller",
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(35),
                   fontWeight: FontWeight.w600,

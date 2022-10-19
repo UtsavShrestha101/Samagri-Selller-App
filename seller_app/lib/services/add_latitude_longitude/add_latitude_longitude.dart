@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_info_window/custom_info_window.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,24 +14,30 @@ import 'package:uuid/uuid.dart';
 import 'dart:ui' as ui;
 
 import '../../models/lat_long_controller.dart';
+import '../../models/user_model.dart';
 import '../../utils/color.dart';
 import '../../widget/our_sized_box.dart';
 
 class AddLatLongFirebase {
-  addLatLong(double latitude, double longitude) async {
+  addLatLong(UserModel userModel, String url) async {
     print("Inside latitude and longitude service");
     try {
-      var uid = Uuid().v4();
-      await FirebaseFirestore.instance.collection("Locations").doc(uid).set(
+      await FirebaseFirestore.instance
+          .collection("Locations")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(
         {
-          "uid": uid,
-          "longitude": longitude,
-          "latitude": latitude,
+          "name": userModel.name,
+          "uid": FirebaseAuth.instance.currentUser!.uid,
+          "longitude": userModel.long,
+          "latitude": userModel.lat,
+          "placeName": userModel.location,
+          "image": url,
         },
       ).then((value) {
-        OurToast().showSuccessToast(
-          "Location added",
-        );
+        // OurToast().showSuccessToast(
+        //   "Location added",
+        // );
       });
     } catch (e) {
       OurToast().showErrorToast(e.toString());

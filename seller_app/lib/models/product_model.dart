@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {
   final String uid;
+  final String ownerUid;
   final String name;
   final String desc;
   final double price;
@@ -16,6 +17,7 @@ class ProductModel {
   final String shop_name;
 
   ProductModel({
+    required this.ownerUid,
     required this.shop_name,
     required this.favorite,
     required this.searchfrom,
@@ -33,6 +35,7 @@ class ProductModel {
 
   Map<String, dynamic> toMap() {
     return {
+      "ownerUid":ownerUid,
       'uid': uid,
       'name': name,
       'desc': desc,
@@ -50,7 +53,8 @@ class ProductModel {
 
   factory ProductModel.fromMap(DocumentSnapshot map) {
     return ProductModel(
-      uid: map['uid'] ?? '',
+      ownerUid: map["ownerUid"]??'', 
+           uid: map['uid'] ?? '',
       name: map['name'] ?? '',
       desc: map['desc'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,

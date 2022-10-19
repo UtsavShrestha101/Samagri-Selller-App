@@ -12,12 +12,15 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:myapp/controller/quantity_controller.dart';
 import 'package:myapp/models/product_model.dart';
 import 'package:myapp/models/review_model.dart';
+import 'package:myapp/screens/dashboard_screen/shopping_shop_profile_screen.dart';
 import 'package:myapp/services/recommendation_history/recommendation_history.dart';
 import 'package:myapp/utils/color.dart';
 import 'package:myapp/widget/our_sized_box.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:readmore/readmore.dart';
 import '../../controller/login_controller.dart';
 import '../../models/firebase_user_model.dart';
+import '../../models/user_model.dart';
 import '../../services/firestore_service/product_detail.dart';
 import '../../services/firestore_service/userprofile_detail.dart';
 import '../../widget/our_elevated_button.dart';
@@ -458,14 +461,15 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
           child: Scaffold(
             appBar: AppBar(
               leading: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: darklogoColor,
-                    size: ScreenUtil().setSp(25),
-                  )),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back,
+                  color: darklogoColor,
+                  size: ScreenUtil().setSp(25),
+                ),
+              ),
               elevation: 0,
               backgroundColor: Colors.transparent,
               title: Text(
@@ -644,13 +648,40 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                                 // tag: "ShopName-$key",
                                 child: Material(
                                   type: MaterialType.transparency,
-                                  child: Text(
-                                    widget.productModel.shop_name,
-                                    style: TextStyle(
-                                      color: darklogoColor,
-                                      fontSize: ScreenUtil().setSp(17.5),
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 0,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      DocumentSnapshot abc =
+                                          await FirebaseFirestore
+                                              .instance
+                                              .collection("Sellers")
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              .get();
+                                      UserModel userModel =
+                                          UserModel.fromMap(abc);
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          child: ShoppingShopProfileScreen(
+                                            userModel: userModel,
+                                            shopName:
+                                                widget.productModel.shop_name,
+                                            shopOwnerUID:
+                                                widget.productModel.ownerUid,
+                                          ),
+                                          type: PageTransitionType.leftToRight,
+                                        ),
+                                      );
+                                      // print("Button Pressed");
+                                    },
+                                    child: Text(
+                                      widget.productModel.shop_name,
+                                      style: TextStyle(
+                                        color: darklogoColor,
+                                        fontSize: ScreenUtil().setSp(17.5),
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 0,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -956,8 +987,9 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                                                 top: 4,
                                                 child: FxContainer.rounded(
                                                   child: Text(
-                                                    firebaseUserModel.cartItemNo
-                                                        .toString(),
+                                                    "aa",
+                                                    // firebaseUserModel.cartItemNo
+                                                    //     .toString(),
                                                     style: TextStyle(
                                                       fontSize: ScreenUtil()
                                                           .setSp(12.5),
@@ -981,22 +1013,22 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                                       Expanded(
                                         child: InkWell(
                                           onTap: () async {
-                                            if (firebaseUserModel.cartItems
-                                                .contains(
-                                                    widget.productModel.uid)) {
-                                              cartController.reverse();
-                                              await ProductDetailFirestore()
-                                                  .removeItemFromCart(
-                                                      firebaseUserModel,
-                                                      widget.productModel);
-                                            } else {
-                                              cartController.forward();
-                                              await ProductDetailFirestore()
-                                                  .addItemToCart(
-                                                      firebaseUserModel,
-                                                      widget.productModel,
-                                                      1);
-                                            }
+                                            // if (firebaseUserModel.cartItems
+                                            //     .contains(
+                                            //         widget.productModel.uid)) {
+                                            //   cartController.reverse();
+                                            //   await ProductDetailFirestore()
+                                            //       .removeItemFromCart(
+                                            //           firebaseUserModel,
+                                            //           widget.productModel);
+                                            // } else {
+                                            //   cartController.forward();
+                                            //   await ProductDetailFirestore()
+                                            //       .addItemToCart(
+                                            //           firebaseUserModel,
+                                            //           widget.productModel,
+                                            //           1);
+                                            // }
                                           },
                                           child: Container(
                                             height: ScreenUtil().setSp(40),
@@ -1016,11 +1048,12 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                                             ),
                                             child: Center(
                                               child: Text(
-                                                firebaseUserModel.cartItems
-                                                        .contains(widget
-                                                            .productModel.uid)
-                                                    ? "Remove from cart"
-                                                    : "Add to cart",
+                                                // firebaseUserModel.cartItems
+                                                //         .contains(widget
+                                                //             .productModel.uid)
+                                                //     ? "Remove from cart"
+                                                //     :
+                                                "Add to cart",
                                                 style: TextStyle(
                                                   fontSize:
                                                       ScreenUtil().setSp(20),
@@ -1155,10 +1188,10 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                           },
                         ),
                       ),
-                      OurRecommendationWidget(
-                        productUIDhide: widget.productModel.uid,
-                      ),
-                      OurSizedBox(),
+                      // OurRecommendationWidget(
+                      //   productUIDhide: widget.productModel.uid,
+                      // ),
+                      // OurSizedBox(),
                     ],
                   ),
                 ),

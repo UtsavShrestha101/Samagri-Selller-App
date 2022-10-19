@@ -12,17 +12,18 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/controller/category_tag_controller.dart';
 import 'package:myapp/db/db_helper.dart';
-import 'package:myapp/models/recommendation_history_model.dart';
+import 'package:myapp/models/user_model.dart';
 import 'package:myapp/screens/dashboard_screen/shopping_search_product_screen.dart';
 import 'package:myapp/services/current_location/get_current_location.dart';
+import 'package:myapp/services/phone_auth/phone_auth.dart';
 import 'package:myapp/utils/color.dart';
-import 'package:myapp/widget/our_category_context.dart';
+import 'package:myapp/widget/our_category_context_seller.dart';
 import 'package:myapp/widget/our_shimmer_widget.dart';
 import 'package:myapp/widget/our_sized_box.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../models/category_model.dart';
 import '../../models/lat_long_controller.dart';
-import '../../widget/our_all_content.dart';
+import '../../widget/our_all_content_seller.dart';
 import '../../widget/our_carousel_slider.dart';
 import 'package:scroll_to_id/scroll_to_id.dart';
 
@@ -42,6 +43,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
   String category = "All";
   final scrollController = ScrollController();
   final items = [
+    "All",
     "Grocery",
     "Electronic",
     "Beverage",
@@ -80,7 +82,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
     // TODO: implement initState
 
     super.initState();
-    showIntroData();
+    // showIntroData();
     Get.find<CategoryTagController>().initialize();
     animationController = AnimationController(
       duration: Duration(milliseconds: 900),
@@ -186,7 +188,20 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                           width: ScreenUtil().setSp(12.5),
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
+                            print("Hello World");
+                            DocumentSnapshot abc = await FirebaseFirestore
+                                .instance
+                                .collection("Sellers")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .get();
+                            UserModel userModel = UserModel.fromMap(abc);
+                            print(abc["name"]);
+                            print(userModel.location);
+                            print(userModel.lat);
+                            print(userModel.long);
+                            print("Utsav Shrestha111");
+
                             _scaffoldKey.currentState!.openDrawer();
                           },
                           child: Icon(
@@ -212,7 +227,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                                   width: ScreenUtil().setSp(7.5),
                                 ),
                                 Text(
-                                  "Samagri",
+                                  "Samagri-Seller",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: ScreenUtil().setSp(20.5),
@@ -262,7 +277,9 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                           ),
                           builder: (context, key) => InkWell(
                             key: key,
-                            onTap: () {},
+                            onTap: () {
+                              Auth().logout();
+                            },
                             child: RotationTransition(
                               turns: bellAnimation,
                               child: Icon(
@@ -284,91 +301,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                   id: "Utsav1",
                   child: OurSizedBox(),
                 ),
-                ScrollContent(
-                  id: "id1",
-                  child: IntroStepBuilder(
-                    order: 3,
-                    text: 'Product priority based on location',
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        ScreenUtil().setSp(25),
-                      ),
-                    ),
-                    builder: (context, key) => Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setSp(10),
-                      ),
-                      child: InkWell(
-                        key: key,
-                        onTap: () {},
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              FeatherIcons.mapPin,
-                              color: logoColor,
-                              size: ScreenUtil().setSp(20.5),
-                            ),
-                            SizedBox(
-                              width: ScreenUtil().setSp(12.5),
-                            ),
-                            Text(
-                              "Nearby:",
-                              style: TextStyle(
-                                fontSize: ScreenUtil().setSp(17.5),
-                                fontWeight: FontWeight.w700,
-                                color: darklogoColor,
-                              ),
-                            ),
-                            SizedBox(
-                              width: ScreenUtil().setSp(12.5),
-                            ),
-                            ValueListenableBuilder(
-                              valueListenable: Hive.box<String>(
-                                      DatabaseHelper.nearbylocationDB)
-                                  .listenable(),
-                              builder: (context, Box<String> boxs, child) {
-                                String value = boxs.get("state",
-                                    defaultValue: "Select location")!;
-                                print("===========");
-                                print(value);
-                                print("===========");
-                                return Expanded(
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(
-                                      fontSize: ScreenUtil().setSp(15),
-                                      fontWeight: FontWeight.w500,
-                                      color: logoColor,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                ScrollContent(
-                  id: "Utsav2",
-                  child: OurSizedBox(),
-                ),
-                ScrollContent(
-                  id: "id2",
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setSp(10),
-                    ),
-                    child: OurCarousel(),
-                  ),
-                ),
-                ScrollContent(
-                  id: "Utsav3",
-                  child: OurSizedBox(),
-                ),
+
                 ScrollContent(
                   id: "id3",
                   child: IntroStepBuilder(
@@ -382,37 +315,47 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                     builder: (context, key) => Container(
                       margin: EdgeInsets.symmetric(
                         horizontal: ScreenUtil().setSp(
-                          10,
+                          2.5,
                         ),
                       ),
                       child: SizedBox(
                         key: key,
-                        height: ScreenUtil().setSp(100),
+                        height: ScreenUtil().setSp(50),
                         child: AnimationLimiter(
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection("category")
-                                // .orderBy("timestamp", descending: true)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.docs.length > 0) {
-                                  return ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data!.docs.length + 1,
-                                    itemBuilder: (context, indexxxx) {
-                                      if (indexxxx == 0) {
-                                        return Obx(
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: items.length,
+                                itemBuilder: (context, index) {
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: Duration(milliseconds: 700),
+                                    child: SlideAnimation(
+                                      horizontalOffset:
+                                          MediaQuery.of(context).size.width,
+                                      child: FadeInAnimation(
+                                        child: Obx(
                                           () => InkWell(
                                             onTap: () {
-                                              if (indexxxx == 0) {
+                                              if (index == 0) {
                                                 Get.find<
                                                         CategoryTagController>()
                                                     .changeTag(0, "All");
                                                 scrollToId.animateTo(
                                                   "All",
+                                                  duration: Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.ease,
+                                                );
+                                              } else {
+                                                Get.find<
+                                                        CategoryTagController>()
+                                                    .changeTag(
+                                                  index,
+                                                  items[index],
+                                                );
+                                                scrollToId.animateTo(
+                                                  items[index],
                                                   duration: Duration(
                                                       milliseconds: 500),
                                                   curve: Curves.ease,
@@ -424,290 +367,53 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                   ScreenUtil().setSp(
-                                                    20,
+                                                    15,
                                                   ),
                                                 ),
-                                                color: indexxxx ==
+                                                color: index ==
                                                         Get.find<
                                                                 CategoryTagController>()
                                                             .tag
                                                             .value
-                                                    ? darklogoColor
+                                                    ? logoColor
                                                         .withOpacity(0.45)
                                                     : Colors.grey
                                                         .withOpacity(0.4),
                                               ),
                                               margin: EdgeInsets.symmetric(
                                                 horizontal:
-                                                    ScreenUtil().setSp(5),
-                                                vertical: ScreenUtil().setSp(5),
+                                                    ScreenUtil().setSp(2),
+                                                vertical: ScreenUtil().setSp(2),
                                               ),
                                               padding: EdgeInsets.symmetric(
                                                 horizontal:
                                                     ScreenUtil().setSp(5),
                                                 vertical: ScreenUtil().setSp(5),
                                               ),
-                                              child: Column(
-                                                children: [
-                                                  Spacer(),
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(
-                                                        ScreenUtil().setSp(2),
-                                                      ),
-                                                    ),
-                                                    child: Image.network(
-                                                      "https://firebasestorage.googleapis.com/v0/b/ride-sharing-app-1.appspot.com/o/all.jpg?alt=media&token=9465b073-1ea0-44fc-8ee2-4f624c54e9a4",
-                                                      height: ScreenUtil()
-                                                          .setSp(45),
-                                                      width: ScreenUtil()
-                                                          .setSp(45),
-                                                      fit: BoxFit.fill,
-                                                    ),
-
-                                                    // CachedNetworkImage(
-                                                    //   height: ScreenUtil()
-                                                    //       .setSp(45),
-                                                    //   width: ScreenUtil()
-                                                    //       .setSp(45),
-                                                    //   fit: BoxFit.fill,
-                                                    //   imageUrl:
-                                                    //       "https://firebasestorage.googleapis.com/v0/b/ride-sharing-app-1.appspot.com/o/all.jpg?alt=media&token=9465b073-1ea0-44fc-8ee2-4f624c54e9a4",
-                                                    //   placeholder:
-                                                    //       (context, url) =>
-                                                    //           Image.asset(
-                                                    //     "assets/images/placeholder.png",
-                                                    //     height: ScreenUtil()
-                                                    //         .setSp(45),
-                                                    //     width: ScreenUtil()
-                                                    //         .setSp(45),
-                                                    //     // width: ScreenUtil().setSp(150),
-                                                    //   ),
-                                                    // ),
-                                                  ),
-                                                  SizedBox(
-                                                    height:
-                                                        ScreenUtil().setSp(5),
-                                                  ),
-                                                  Text(
-                                                    "All",
-                                                    style: TextStyle(
-                                                      fontSize: ScreenUtil()
-                                                          .setSp(15),
-                                                      color: logoColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  Spacer(
-                                                      // flex: 2,
-                                                      ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        CategoryModel categoryModel =
-                                            CategoryModel.fromMap(snapshot
-                                                .data!.docs[indexxxx - 1]);
-
-                                        return AnimationConfiguration
-                                            .staggeredList(
-                                          position: indexxxx,
-                                          duration: Duration(milliseconds: 00),
-                                          child: SlideAnimation(
-                                            horizontalOffset:
-                                                MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                            child: FadeInAnimation(
-                                              child: Container(
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      ScreenUtil().setSp(2.5),
-                                                  vertical:
-                                                      ScreenUtil().setSp(2.5),
-                                                ),
-                                                child: Obx(
-                                                  () => InkWell(
-                                                    onTap: () {
-                                                      if (indexxxx == 0) {
-                                                        Get.find<
-                                                                CategoryTagController>()
-                                                            .changeTag(
-                                                                0, "All");
-                                                        scrollToId.animateTo(
-                                                          "All",
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                          curve: Curves.ease,
-                                                        );
-                                                      } else {
-                                                        Get.find<
-                                                                CategoryTagController>()
-                                                            .changeTag(
-                                                          indexxxx,
-                                                          categoryModel
-                                                              .categoryName,
-                                                        );
-                                                        scrollToId.animateTo(
-                                                          categoryModel
-                                                              .categoryName,
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                          curve: Curves.ease,
-                                                        );
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          ScreenUtil().setSp(
-                                                            20,
-                                                          ),
-                                                        ),
-                                                        color: indexxxx ==
-                                                                Get.find<
-                                                                        CategoryTagController>()
-                                                                    .tag
-                                                                    .value
-                                                            ? darklogoColor
-                                                                .withOpacity(
-                                                                    0.45)
-                                                            : Colors.grey
-                                                                .withOpacity(
-                                                                    0.4),
-                                                      ),
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                        horizontal: ScreenUtil()
-                                                            .setSp(2.5),
-                                                        vertical: ScreenUtil()
-                                                            .setSp(2.5),
-                                                      ),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        horizontal: ScreenUtil()
-                                                            .setSp(5),
-                                                        vertical: ScreenUtil()
-                                                            .setSp(5),
-                                                      ),
-                                                      child: Column(
-                                                        children: [
-                                                          Spacer(),
-                                                          ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                ScreenUtil()
-                                                                    .setSp(2),
-                                                              ),
-                                                            ),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              height:
-                                                                  ScreenUtil()
-                                                                      .setSp(
-                                                                          45),
-                                                              width:
-                                                                  ScreenUtil()
-                                                                      .setSp(
-                                                                          45),
-                                                              fit: BoxFit.fill,
-                                                              imageUrl:
-                                                                  categoryModel
-                                                                      .image,
-                                                              placeholder:
-                                                                  (context,
-                                                                          url) =>
-                                                                      Image
-                                                                          .asset(
-                                                                "assets/images/placeholder.png",
-                                                                height:
-                                                                    ScreenUtil()
-                                                                        .setSp(
-                                                                            45),
-                                                                width:
-                                                                    ScreenUtil()
-                                                                        .setSp(
-                                                                            45),
-                                                                // width: ScreenUtil().setSp(150),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: ScreenUtil()
-                                                                .setSp(5),
-                                                          ),
-                                                          Text(
-                                                            categoryModel
-                                                                .categoryName,
-                                                            style: TextStyle(
-                                                              fontSize:
-                                                                  ScreenUtil()
-                                                                      .setSp(
-                                                                          15),
-                                                              color: logoColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
-                                                          Spacer(
-                                                              // flex: 2,
-                                                              ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                              child: Center(
+                                                child: Text(
+                                                  items[index],
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: ScreenUtil()
+                                                        .setSp(13.5),
+                                                    color: index ==
+                                                            Get.find<
+                                                                    CategoryTagController>()
+                                                                .tag
+                                                                .value
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                } else {
-                                  return ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: List.generate(
-                                      4,
-                                      (index) => ShimmerWidget.rectangular(
-                                        height: ScreenUtil().setSp(40),
+                                        ),
                                       ),
                                     ),
                                   );
-                                }
-                              } else {
-                                return ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: List.generate(
-                                    4,
-                                    (index) => Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: ScreenUtil().setSp(5),
-                                        vertical: ScreenUtil().setSp(5),
-                                      ),
-                                      child: ShimmerWidget.rectangular(
-                                        width: ScreenUtil().setSp(150),
-                                        height: ScreenUtil().setSp(10),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                                // return Text("data");
-                              }
-                            },
-                          ),
-                        ),
+                                })),
                       ),
                     ),
                   ),
@@ -715,67 +421,67 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
 
                 ScrollContent(
                   id: "All",
-                  child: OurAllContext(
+                  child: OurAllSellerContext(
                     category: "All",
                   ),
                 ),
                 ScrollContent(
                   id: "Grocery",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Grocery",
                   ),
                 ),
                 ScrollContent(
                   id: "Electronic",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Electronic",
                   ),
                 ),
                 ScrollContent(
                   id: "Beverage",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Beverage",
                   ),
                 ),
                 ScrollContent(
                   id: "Personal care",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Personal care",
                   ),
                 ),
                 ScrollContent(
                   id: "Fashain and apparel",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Fashain and apparel",
                   ),
                 ),
                 ScrollContent(
                   id: "Baby care",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Baby care",
                   ),
                 ),
                 ScrollContent(
                   id: "Bakery and dairy",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Bakery and dairy",
                   ),
                 ),
                 ScrollContent(
                   id: "Eggs and meat",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Eggs and meat",
                   ),
                 ),
                 ScrollContent(
                   id: "Household items",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Household items",
                   ),
                 ),
                 ScrollContent(
                   id: "Kitchen and pet food",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Kitchen and pet food",
                   ),
                 ),
@@ -783,21 +489,14 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                 // "Beauty",
                 ScrollContent(
                   id: "Vegetable and fruits",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Vegetable and fruits",
                   ),
                 ),
                 ScrollContent(
                   id: "Beauty",
-                  child: OurCategoryContext(
+                  child: OurCategorySellerContext(
                     category: "Beauty",
-                  ),
-                ),
-
-                ScrollContent(
-                  id: "Aadbd as",
-                  child: OurRecommendationWidget(
-                    productUIDhide: "UtsavHAHAHA",
                   ),
                 ),
               ],

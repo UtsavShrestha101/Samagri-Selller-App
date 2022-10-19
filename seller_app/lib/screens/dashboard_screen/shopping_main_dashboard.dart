@@ -14,8 +14,10 @@ import 'package:myapp/screens/dashboard_screen/shopping_add_product_screen.dart'
 import 'package:myapp/screens/dashboard_screen/shopping_explore_shop.dart';
 import 'package:myapp/screens/dashboard_screen/shopping_my_cart_screen.dart';
 import 'package:myapp/services/current_location/get_current_location.dart';
+import 'package:myapp/widget/our_elevated_button.dart';
 import '../../controller/dashboard_controller.dart';
 import '../../models/firebase_user_model.dart';
+import '../../services/phone_auth/phone_auth.dart';
 import '../../utils/color.dart';
 import 'shopping_home_screen.dart';
 import 'shopping_profile_screen.dart';
@@ -52,34 +54,16 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
     List widgets = [
       const ShoppingHomeScreen(),
       // const ShoppingSearchScreen(),
-      ShopExploreScreen(
-        pinWidget: Icon(
-          Icons.location_pin,
-          color: Colors.red,
-          size: ScreenUtil().setSp(50),
-        ),
-        pinColor: Colors.blue,
-        addressPlaceHolder: "Loading",
-        addressTitle: "Address",
-        apiKey: "AIzaSyBlMkiLJ-G7YNmFabacXbMwfI2dectJSfs",
-        appBarTitle: "Select delivery address",
-        confirmButtonColor: logoColor,
-        confirmButtonText: "Done",
-        confirmButtonTextColor: Colors.white,
-        country: "NP",
-        language: "en",
-        searchHint: "Search",
-        // initialLocation: LatLng(
-        //   position.latitude,
-        //   position.longitude,
-        //   // 12.34,
-        //   // 23.45
-        // ),
-      ),
-      // ShopAddProductScreen(),
+
+      ShopAddProductScreen(),
       const ShoppingAddListScreen(),
       const ShoppingMyCartScreen(),
-      ShoppingProfileScreen()
+      // ShoppingProfileScreen(),
+      OurElevatedButton(
+          title: "LOGOUT",
+          function: () {
+            Auth().logout();
+          })
     ];
     return Obx(() => GestureDetector(
           // onHorizontalDragEnd: (dragDetail) {
@@ -135,7 +119,8 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    MdiIcons.magnify,
+                    Icons.add,
+                    // MdiIcons.decimalIncrease,
                     color: darklogoColor,
                     size: ScreenUtil().setSp(22.5),
                   ),
@@ -181,7 +166,9 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
                                 badgeColor: darklogoColor,
                                 position: BadgePosition.topEnd(),
                                 badgeContent: Text(
-                                  firebaseUserModel.cartItemNo.toString(),
+                                  "aa",
+
+                                  // firebaseUserModel.cartItemNo.toString(),
                                   style: TextStyle(
                                       fontSize: ScreenUtil().setSp(15),
                                       fontWeight: FontWeight.w600,

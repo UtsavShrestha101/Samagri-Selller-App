@@ -17,16 +17,16 @@ import '../utils/generator.dart';
 import 'our_product_grid_loading_widget.dart';
 import 'our_product_grid_tile.dart';
 
-class OurCategoryContext extends StatefulWidget {
+class OurCategorySellerContext extends StatefulWidget {
   final String category;
-  const OurCategoryContext({Key? key, required this.category})
+  const OurCategorySellerContext({Key? key, required this.category})
       : super(key: key);
 
   @override
-  State<OurCategoryContext> createState() => _OurCategoryContextState();
+  State<OurCategorySellerContext> createState() => _OurCategorySellerContextState();
 }
 
-class _OurCategoryContextState extends State<OurCategoryContext> {
+class _OurCategorySellerContextState extends State<OurCategorySellerContext> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,6 +49,8 @@ class _OurCategoryContextState extends State<OurCategoryContext> {
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection("All")
+                .where("ownerUid",
+                    isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                 .where(
                   "category",
                   arrayContains: widget.category,

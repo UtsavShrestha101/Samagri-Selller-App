@@ -11,7 +11,7 @@ import 'package:myapp/controller/login_controller.dart';
 
 import '../../widget/our_flutter_toast.dart';
 
-class AddProduct{
+class AddProfile {
   Future<String?> uploadImage(File pickedImage) async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
@@ -27,7 +27,6 @@ class AddProduct{
             await firebaseStorage.ref("$filename").getDownloadURL();
 
         return downloadUrl;
-        
       } else {}
     } on FirebaseException catch (e) {
       print("errorrrrr");
