@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirebaseUserModel {
+class FirebaseSellerModel {
   final int product;
   final int follower;
   final int following;
@@ -17,7 +17,7 @@ class FirebaseUserModel {
   final List followerList;
   final List followingList;
 
-  FirebaseUserModel({
+  FirebaseSellerModel({
     required this.product,
     required this.follower,
     required this.following,
@@ -46,8 +46,8 @@ class FirebaseUserModel {
     };
   }
 
-  factory FirebaseUserModel.fromMap(DocumentSnapshot map) {
-    return FirebaseUserModel(
+  factory FirebaseSellerModel.fromMap(DocumentSnapshot map) {
+    return FirebaseSellerModel(
       uid: map['uid'] ?? '',
       email: map['email'] ?? '',
       name: map['name'] ?? '',

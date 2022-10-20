@@ -136,7 +136,7 @@ class _ShoppingLoginScreenState extends State<ShoppingLoginScreen> {
                                 //   _phone_number_controller.text.trim(),
                                 //   context,
                                 // );
-                                Get.find<LoginController>().toggle(false);
+                                Get.find<LoginController>().toggle(true);
                                 Auth().loginAccount(
                                   _email_controller.text.trim(),
                                   _password_controller.text.trim(),

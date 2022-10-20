@@ -150,9 +150,9 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                           snapshot) {
                                     if (snapshot.hasData) {
                                       if (snapshot.data!.exists) {
-                                        firebaseUserModel =
-                                            FirebaseUserModel.fromMap(
-                                                snapshot.data!.data()!);
+                                        // firebaseUserModel =
+                                        //     FirebaseUserModel.fromMap(
+                                        //         snapshot.data!.data()!);
                                         return Container(
                                           padding: FxSpacing.all(20),
                                           child: Column(

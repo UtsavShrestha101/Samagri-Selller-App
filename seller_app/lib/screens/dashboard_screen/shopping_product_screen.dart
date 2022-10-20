@@ -958,9 +958,9 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                                   snapshot) {
                             if (snapshot.hasData) {
                               if (snapshot.data!.exists) {
-                                FirebaseUserModel firebaseUserModel =
-                                    FirebaseUserModel.fromMap(
-                                        snapshot.data!.data()!);
+                                // FirebaseUserModel firebaseUserModel =
+                                //     FirebaseUserModel.fromMap(
+                                //         snapshot.data!.data()!);
                                 return Container(
                                   child: Row(
                                     children: [

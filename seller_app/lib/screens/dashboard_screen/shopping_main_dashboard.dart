@@ -159,9 +159,9 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
                             );
                           } else if (snapshot.hasData) {
                             if (snapshot.data!.exists) {
-                              FirebaseUserModel firebaseUserModel =
-                                  FirebaseUserModel.fromMap(
-                                      snapshot.data!.data()!);
+                              // FirebaseUserModel firebaseUserModel =
+                              //     FirebaseUserModel.fromMap(
+                              //         snapshot.data!.data()!);
                               return Badge(
                                 badgeColor: darklogoColor,
                                 position: BadgePosition.topEnd(),

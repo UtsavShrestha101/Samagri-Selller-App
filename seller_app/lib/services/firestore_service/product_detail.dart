@@ -13,6 +13,7 @@ import '../../controller/dashboard_controller.dart';
 import '../../controller/login_controller.dart';
 import '../../models/firebase_user_model.dart';
 import '../../models/product_model.dart';
+import '../../models/user_model.dart';
 import '../../widget/our_flutter_toast.dart';
 
 class ProductDetailFirestore {
@@ -59,7 +60,18 @@ class ProductDetailFirestore {
           categoryItem,
         ],
         "shop_name": abc["name"]
-      }).then((value) {
+      }).then((value) async {
+        DocumentSnapshot abc = await FirebaseFirestore.instance
+            .collection("Sellers")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+        // UserModel userModel = UserModel.fromMap(abc);
+        await FirebaseFirestore.instance
+            .collection("Sellers")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "product": abc["product"] + 1,
+        });
         Get.find<DashboardController>().changeIndexs(0);
         OurToast().showSuccessToast("Product added");
       });

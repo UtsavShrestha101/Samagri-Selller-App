@@ -19,6 +19,11 @@ class SellerFireStore {
           .collection("Sellers")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set({
+        "product": 0,
+        "follower": 0,
+        "following": 0,
+        "followerList": [],
+        "followingList": [],
         "uid": FirebaseAuth.instance.currentUser!.uid,
         "email": userModel.email,
         "name": userModel.name,
