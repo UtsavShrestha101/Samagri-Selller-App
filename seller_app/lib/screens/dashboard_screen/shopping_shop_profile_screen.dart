@@ -11,7 +11,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:myapp/utils/color.dart';
 import 'package:scroll_to_id/scroll_to_id.dart';
-
 import '../../controller/category_tag_controller.dart';
 import '../../models/firebase_user_model.dart';
 import '../../models/user_model.dart';

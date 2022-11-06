@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,6 +215,13 @@ class Auth {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password)
             .then((value) async {
+              String? token = await FirebaseMessaging.instance.getToken();
+             await FirebaseFirestore.instance
+          .collection("Sellers")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "token": token,
+      });
           Get.find<LoginController>().toggle(false);
 
           OurToast().showSuccessToast("User logged in successfully");
