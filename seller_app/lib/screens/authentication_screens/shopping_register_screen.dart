@@ -446,6 +446,7 @@ class _ShoppingRegisterScreenState extends State<ShoppingRegisterScreen> {
                                   if (_password_controller.text.trim().length >=
                                       6) {
                                     UserModel userModel = UserModel(
+                                      uid: "",
                                       imageUrl: "",
                                       lat: Get.find<LoginLocationController>()
                                           .lat
