@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:myapp/models/seller_model.dart';
 import 'package:myapp/models/user_model.dart';
 
 import '../../models/user_model_firebase.dart';
 import '../compress image/compress_image.dart';
 import 'chat_info_detail.dart';
 
-
 class ChatImageUpload {
-  uploadImage(FirebaseUser11Model usermodel, File file) async {
+  uploadImage(FirebaseUser11Model usermodel, File file,
+      FirebaseSellerModel sellerModel) async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
     String downloadUrl = "";
     try {
@@ -25,7 +26,11 @@ class ChatImageUpload {
             .ref(
                 "${FirebaseAuth.instance.currentUser!.uid}${usermodel.uid}/chats/${filename}")
             .getDownloadURL();
-        await ChatDetailFirebase().imageDetail(downloadUrl, usermodel);
+        await ChatDetailFirebase().imageDetail(
+          downloadUrl,
+          usermodel,
+          sellerModel,
+        );
         print("image uploaded");
       }
     } catch (e) {}

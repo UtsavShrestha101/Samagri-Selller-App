@@ -11,10 +11,12 @@ import 'package:myapp/screens/dashboard_screen/shopping_chat_send_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../models/messanger_home_model.dart';
+import '../../models/seller_model.dart';
 import '../../models/user_model.dart';
 import '../../models/user_model_firebase.dart';
 import '../../utils/color.dart';
 import '../../widget/our_sized_box.dart';
+import '../../widget/our_spinner.dart';
 
 class ShoppingChatScreen extends StatefulWidget {
   const ShoppingChatScreen({Key? key}) : super(key: key);
@@ -149,7 +151,16 @@ class _ShoppingChatScreenState extends State<ShoppingChatScreen>
                                                   snapshot.data!.docs[index]);
                                           // return Text("Utsav");
                                           return InkWell(
-                                            onTap: () {
+                                            onTap: () async {
+                                              var a = await FirebaseFirestore
+                                                  .instance
+                                                  .collection("Sellers")
+                                                  .doc(FirebaseAuth.instance
+                                                      .currentUser!.uid)
+                                                  .get();
+                                              FirebaseSellerModel sellerModel =
+                                                  FirebaseSellerModel.fromMap(
+                                                      a);
                                               Navigator.push(
                                                 context,
                                                 PageTransition(
@@ -157,6 +168,7 @@ class _ShoppingChatScreenState extends State<ShoppingChatScreen>
                                                       .leftToRight,
                                                   child: MessageSendScreen(
                                                     userModel: userModel,
+                                                    sellerModel: sellerModel,
                                                   ),
                                                 ),
                                               );
@@ -281,12 +293,47 @@ class _ShoppingChatScreenState extends State<ShoppingChatScreen>
                                           );
                                         });
                                   }
+                                  // return OurSpinner();
                                 }
-                                return Container();
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Spacer(),
+                                      Image.asset(
+                                        "assets/images/logo.png",
+                                        fit: BoxFit.contain,
+                                        height: ScreenUtil().setSp(100),
+                                        width: ScreenUtil().setSp(100),
+                                      ),
+                                      OurSizedBox(),
+                                      Text(
+                                        "We're sorry",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: logoColor,
+                                          fontSize: ScreenUtil().setSp(17.5),
+                                        ),
+                                      ),
+                                      OurSizedBox(),
+                                      Text(
+                                        "You have not sent any messages",
+                                        style: TextStyle(
+                                          color: Colors.black45,
+                                          fontSize: ScreenUtil().setSp(15),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                );
                               },
                             );
                           });
                     }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return OurSpinner();
                   }
                   return Center(
                     child: Column(

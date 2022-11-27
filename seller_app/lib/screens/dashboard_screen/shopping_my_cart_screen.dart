@@ -14,6 +14,7 @@ import 'package:myapp/widget/our_spinner.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../models/cart_product_model.dart';
 import '../../models/firebase_user_model.dart';
+import '../../models/my_order_request_product.dart';
 import '../../utils/color.dart';
 import '../../widget/our_sized_box.dart';
 
@@ -91,7 +92,7 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                         width: ScreenUtil().setSp(7.5),
                       ),
                       Text(
-                        "My Cart",
+                        "My Orders",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: ScreenUtil().setSp(25),
@@ -105,11 +106,12 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection("Carts")
+                        .collection("RequestOrder")
                         .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .collection("Products")
+                        .collection("Requests")
+                        .where("ispicked", isEqualTo: false)
                         .orderBy(
-                          "addedOn",
+                          "requestedOn",
                           descending: true,
                         )
                         .snapshots(),
@@ -129,147 +131,20 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: snapshot.data!.docs.length,
                                   itemBuilder: (context, index) {
-                                    CartProductModel cartProductModel =
-                                        CartProductModel.fromMap(
+                                    MyOrderRequestProduct
+                                        myOrderRequestProduct =
+                                        MyOrderRequestProduct.fromMap(
                                             snapshot.data!.docs[index]);
-                                    return OurCartItemWidget(
-                                        cartProductModel: cartProductModel);
-                                  },
-                                ),
-                                StreamBuilder<
-                                    DocumentSnapshot<Map<String, dynamic>>>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection("Users")
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<
-                                              DocumentSnapshot<
-                                                  Map<String, dynamic>>>
-                                          snapshot) {
-                                    if (snapshot.hasData) {
-                                      if (snapshot.data!.exists) {
-                                        // firebaseUserModel =
-                                        //     FirebaseUserModel.fromMap(
-                                        //         snapshot.data!.data()!);
-                                        return Container(
-                                          padding: FxSpacing.all(20),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  FxText.sh1(
-                                                    "Subtotal",
-                                                    fontWeight: 600,
-                                                  ),
-                                                  FxText.sh1(
-                                                    // "Rs.  ${firebaseUserModel.currentCartPrice}",
-                                                    "Ass",
-                                                    fontWeight: 600,
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 12),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    FxText.sh1(
-                                                      "Delivery cost",
-                                                      fontWeight: 600,
-                                                    ),
-                                                    FxText.sh1(
-                                                      "Rs.  60",
-                                                      fontWeight: 600,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 12),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    FxText.sh1("Total",
-                                                        fontWeight: 700),
-                                                    FxText.sh1(
-                                                      "aa",
-                                                        // "Rs.  ${firebaseUserModel.currentCartPrice + 60}",
-                                                        fontWeight: 800),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    }
-                                    return Text("");
-                                  },
-                                ),
-                                OurElevatedButton(
-                                  title: "CHECKOUT",
-                                  function: () async {
-                                    print("CheckOut Utsav 123");
-                                    // position = await GetCurrentLocation()
-                                    //     .getCurrentLocation();
-                                    // var placeMarks =
-                                    //     await placemarkFromCoordinates(
-                                    //   position!.latitude,
-                                    //   position!.longitude,
-                                    // );
-
-                                    // Navigator.push(context,
-                                    //     MaterialPageRoute(builder: (context) {
-                                    //   return ShopMapScreen(
-                                    //     pinWidget: Icon(
-                                    //       Icons.location_pin,
-                                    //       color: Colors.red,
-                                    //       size: 55,
-                                    //     ),
-                                    //     pinColor: Colors.blue,
-                                    //     // context: context,
-                                    //     addressPlaceHolder: "Loading",
-                                    //     addressTitle: "Address",
-                                    //     apiKey:
-                                    //         "AIzaSyBlMkiLJ-G7YNmFabacXbMwfI2dectJSfs",
-                                    //     appBarTitle: "Select delivery address",
-                                    //     confirmButtonColor: logoColor,
-                                    //     confirmButtonText: "Done",
-                                    //     confirmButtonTextColor: Colors.white,
-                                    //     country: "NP",
-                                    //     language: "en",
-                                    //     searchHint: "Search",
-                                    //     initialLocation: LatLng(
-                                    //       position!.latitude,
-                                    //       position!.longitude,
-                                    //     ),
-                                    //   );
-                                    // }));
-
-                                    // KhaltiPaymentPage();
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        type: PageTransitionType.leftToRight,
-                                        child: ShoppingCheckOutScreen(
-                                          totalPrice: 111,
-                                          // firebaseUserModel
-                                          //         .currentCartPrice +
-                                          //     60,
-                                        ),
-                                      ),
+                                    return Column(
+                                      children: [
+                                        Text(myOrderRequestProduct.productName),
+                                      ],
                                     );
+                                    // CartProductModel cartProductModel =
+                                    //     CartProductModel.fromMap(
+                                    //         snapshot.data!.docs[index]);
+                                    // return OurCartItemWidget(
+                                    //     cartProductModel: cartProductModel);
                                   },
                                 ),
                               ],
@@ -297,7 +172,7 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                 ),
                                 OurSizedBox(),
                                 Text(
-                                  "No item added to the cart",
+                                  "No item requested",
                                   style: TextStyle(
                                     color: Colors.black45,
                                     fontSize: ScreenUtil().setSp(15),
@@ -329,7 +204,7 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                             ),
                             OurSizedBox(),
                             Text(
-                              "No item added to the cart",
+                              "No item requested",
                               style: TextStyle(
                                 color: Colors.black45,
                                 fontSize: ScreenUtil().setSp(15),

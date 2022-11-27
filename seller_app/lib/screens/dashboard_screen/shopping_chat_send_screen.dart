@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:myapp/models/seller_model.dart';
 import 'package:myapp/models/user_model.dart';
 import 'package:myapp/utils/color.dart';
 import 'package:myapp/widget/our_spinner.dart';
@@ -26,7 +27,9 @@ import '../../widget/our_text_field.dart';
 
 class MessageSendScreen extends StatefulWidget {
   final FirebaseUser11Model userModel;
-  const MessageSendScreen({Key? key, required this.userModel})
+  final FirebaseSellerModel sellerModel;
+  const MessageSendScreen(
+      {Key? key, required this.userModel, required this.sellerModel})
       : super(key: key);
 
   @override
@@ -71,7 +74,11 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
       if (result != null) {
         setState(() {});
         file = File(result.path);
-        await ChatImageUpload().uploadImage(widget.userModel, file!);
+        await ChatImageUpload().uploadImage(
+          widget.userModel,
+          file!,
+          widget.sellerModel,
+        );
       } else {
         // User canceled the picker
       }
@@ -285,119 +292,123 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
                   },
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: ScreenUtil().setSp(10),
-            vertical: ScreenUtil().setSp(10),
-          ),
-          child: Row(
-            children: [
-              InkWell(
-                onTap: () async {
-                  await pickImage();
-                  // print("Imaged Clicked");
-                },
-                child: Icon(
-                  Icons.image,
-                  size: ScreenUtil().setSp(
-                    30,
-                  ),
-                  color: logoColor,
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: ScreenUtil().setSp(10),
+                  vertical: ScreenUtil().setSp(10),
                 ),
-              ),
-              SizedBox(
-                width: ScreenUtil().setSp(15),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setSp(15),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setSp(15),
-                  ),
-                  height: ScreenUtil().setSp(40),
-                  child: TextFormField(
-                    // textAlign: TextAlign.center,
-                    scrollPadding: EdgeInsets.only(
-                      left: ScreenUtil().setSp(15),
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    cursorColor: Colors.white,
-                    controller: _messaging_controller,
-                    // onChanged: (String value) {
-                    //   Get.find<SearchTextController>()
-                    //       .changeValue(value);
-                    // },
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(15),
-                      color: logoColor,
-                    ),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: ScreenUtil().setSp(10),
-                        horizontal: ScreenUtil().setSp(2),
-                      ),
-                      isDense: true,
-                      hintText: "   Send Message",
-                      hintStyle: TextStyle(
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        await pickImage();
+                        // print("Imaged Clicked");
+                      },
+                      child: Icon(
+                        Icons.image,
+                        size: ScreenUtil().setSp(
+                          30,
+                        ),
                         color: logoColor,
-                        fontSize: ScreenUtil().setSp(
-                          17.5,
-                        ),
                       ),
-                      errorStyle: TextStyle(
-                        fontSize: ScreenUtil().setSp(
-                          13.5,
+                    ),
+                    SizedBox(
+                      width: ScreenUtil().setSp(15),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil().setSp(15),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil().setSp(15),
+                        ),
+                        height: ScreenUtil().setSp(40),
+                        child: TextFormField(
+                          // textAlign: TextAlign.center,
+                          scrollPadding: EdgeInsets.only(
+                            left: ScreenUtil().setSp(15),
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          cursorColor: Colors.white,
+                          controller: _messaging_controller,
+                          // onChanged: (String value) {
+                          //   Get.find<SearchTextController>()
+                          //       .changeValue(value);
+                          // },
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(15),
+                            color: logoColor,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: ScreenUtil().setSp(10),
+                              horizontal: ScreenUtil().setSp(2),
+                            ),
+                            isDense: true,
+                            hintText: "   Send Message",
+                            hintStyle: TextStyle(
+                              color: logoColor,
+                              fontSize: ScreenUtil().setSp(
+                                17.5,
+                              ),
+                            ),
+                            errorStyle: TextStyle(
+                              fontSize: ScreenUtil().setSp(
+                                13.5,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: ScreenUtil().setSp(15),
-              ),
-              InkWell(
-                onTap: () async {
-                  if (_messaging_controller.text.trim().isNotEmpty) {
-                    if (Get.find<MessageSendController>().sendMessage.value) {
-                      Get.find<MessageSendController>().toggle(false);
-                      await ChatDetailFirebase().messageDetail(
-                        _messaging_controller.text.trim(),
-                        widget.userModel,
-                      );
-                      FocusScope.of(context).unfocus();
-                      _messaging_controller.clear();
-                      // Get.find<ProcessingController>().toggle(false);
-                      Get.find<MessageSendController>().toggle(true);
+                    SizedBox(
+                      width: ScreenUtil().setSp(15),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        if (_messaging_controller.text.trim().isNotEmpty) {
+                          if (Get.find<MessageSendController>()
+                              .sendMessage
+                              .value) {
+                            Get.find<MessageSendController>().toggle(false);
+                            await ChatDetailFirebase().messageDetail(
+                              _messaging_controller.text.trim(),
+                              widget.userModel,
+                              widget.sellerModel,
+                            );
+                            FocusScope.of(context).unfocus();
+                            _messaging_controller.clear();
+                            // Get.find<ProcessingController>().toggle(false);
+                            Get.find<MessageSendController>().toggle(true);
 
-                      print("Its not empty");
-                    } else {}
-                  } else {
-                    print("Its empty");
-                    FocusScope.of(context).unfocus();
-                  }
-                },
-                child: Icon(
-                  Icons.send,
-                  size: ScreenUtil().setSp(
-                    30,
-                  ),
-                  color: logoColor,
+                            print("Its not empty");
+                          } else {}
+                        } else {
+                          print("Its empty");
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
+                      child: Icon(
+                        Icons.send,
+                        size: ScreenUtil().setSp(
+                          30,
+                        ),
+                        color: logoColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
+        // bottomNavigationBar:
       ),
     );
   }

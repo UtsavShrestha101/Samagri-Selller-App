@@ -210,33 +210,34 @@ class Auth {
       OurToast().showErrorToast(e.message!);
     }
   }
-   loginAccount(String email, String password) async {
-      try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((value) async {
-              String? token = await FirebaseMessaging.instance.getToken();
-             await FirebaseFirestore.instance
-          .collection("Sellers")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "token": token,
-      });
-          Get.find<LoginController>().toggle(false);
 
-          OurToast().showSuccessToast("User logged in successfully");
-          // Get.off(
-          //   const DashBoardScreen(),
-          // );
-
-          await Hive.box<int>(DatabaseHelper.outerlayerDB).put("state", 2);
+  loginAccount(String email, String password) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        String? token = await FirebaseMessaging.instance.getToken();
+        await FirebaseFirestore.instance
+            .collection("Sellers")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "token": token,
         });
-      } on FirebaseAuthException catch (e) {
         Get.find<LoginController>().toggle(false);
 
-        OurToast().showErrorToast(e.message!);
-      }
+        OurToast().showSuccessToast("User logged in successfully");
+        // Get.off(
+        //   const DashBoardScreen(),
+        // );
+
+        await Hive.box<int>(DatabaseHelper.outerlayerDB).put("state", 2);
+      });
+    } on FirebaseAuthException catch (e) {
+      Get.find<LoginController>().toggle(false);
+
+      OurToast().showErrorToast(e.message!);
     }
+  }
 
   logout() async {
     try {
@@ -255,8 +256,6 @@ class Auth {
 
       OurToast().showErrorToast(e.message!);
     }
-
-   
 
     // logout() async {
     //   try {

@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/models/seller_model.dart';
 import 'package:myapp/models/user_model.dart';
 
 import '../../models/user_model_firebase.dart';
-
+import '../notification_service/notification_service.dart';
 
 class ChatDetailFirebase {
-  messageDetail(String message, FirebaseUser11Model userModel) async {
+  messageDetail(String message, FirebaseUser11Model userModel,
+      FirebaseSellerModel sellerModel) async {
     print("MESSAGE DETAIL SCREEN");
     print("MESSAGE DETAIL SCREEN");
     print("MESSAGE DETAIL SCREEN");
@@ -54,17 +56,19 @@ class ChatDetailFirebase {
         "imageUrl": "",
         "timestamp": Timestamp.now(),
       });
-      // await LocalNotificationService().sendNotification(
-      //     "${userModel.user_name} messaged you",
-      //     message,
-      //     userModel.profile_pic,
-      //     "",
-      //     userModel.token);
+      await NotificationService().sendNotification(
+          "${sellerModel.name} messaged you",
+          message,
+          "userModel.profile_pic",
+          "",
+          userModel.token);
+      print("Doneee sending message");
       print("Doneee sending message");
     } catch (e) {}
   }
 
-  imageDetail(String downloadUrl, FirebaseUser11Model userModel) async {
+  imageDetail(String downloadUrl, FirebaseUser11Model userModel,
+      FirebaseSellerModel sellerModel) async {
     try {
       print("IMAGE DETAIL");
       print(downloadUrl);
@@ -114,12 +118,12 @@ class ChatDetailFirebase {
         "imageUrl": "",
         "timestamp": Timestamp.now(),
       });
-      // await LocalNotificationService().sendNotification(
-      //     "${userModel.user_name} messaged you",
-      //     "",
-      //     userModel.profile_pic,
-      //     downloadUrl,
-      //     userModel.token);
+      await NotificationService().sendNotification(
+          "${sellerModel.name} messaged you",
+          "",
+          "userModel.profile_pic",
+          downloadUrl,
+          userModel.token);
       print("Doneee sending message");
     } catch (e) {
       print("object");

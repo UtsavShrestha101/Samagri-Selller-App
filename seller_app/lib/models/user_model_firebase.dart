@@ -3,18 +3,20 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseUser11Model {
-          final int product;
-          final int follower;
-        final int following;
-        final String uid;
+  final String token;
+  final int product;
+  final int follower;
+  final int following;
+  final String uid;
   final String name;
-        final String AddedOn;
+  final String AddedOn;
   final String imageUrl;
   final String phone;
   final List followerList;
   final List followingList;
 
   FirebaseUser11Model({
+    required this.token,
     required this.product,
     required this.follower,
     required this.following,
@@ -39,6 +41,7 @@ class FirebaseUser11Model {
 
   factory FirebaseUser11Model.fromMap(DocumentSnapshot map) {
     return FirebaseUser11Model(
+      token: map['token'] ?? '',
       uid: map['uid'] ?? '',
       name: map['name'] ?? '',
       AddedOn: map['AddedOn'] ?? '',

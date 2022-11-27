@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -18,6 +19,8 @@ import 'package:myapp/services/current_location/get_current_location.dart';
 import 'package:myapp/widget/our_elevated_button.dart';
 import '../../controller/dashboard_controller.dart';
 import '../../models/firebase_user_model.dart';
+import '../../models/seller_model.dart';
+import '../../services/notification_service/notification_service.dart';
 import '../../services/phone_auth/phone_auth.dart';
 import '../../utils/color.dart';
 import 'shopping_home_screen.dart';
@@ -48,7 +51,26 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getlocation();
+    FirebaseMessaging.instance.getInitialMessage();
+
+    FirebaseMessaging.onMessage.listen((event) {
+      print("Hello");
+      print(FirebaseMessaging.onMessage.isBroadcast);
+      print("Hello");
+      print("object 2");
+      print(event.data);
+
+      // if (event.data != null) {
+      //   print("Hello world");
+      NotificationService.display(event);
+      // }
+    });
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print(event.data);
+      NotificationService.display(event);
+    });
+    // storeNotificationToken();
   }
 
   Widget build(BuildContext context) {
@@ -60,11 +82,14 @@ class _ShoppingFullAppPageState extends State<ShoppingFullApp>
       const ShoppingChatScreen(),
       const ShoppingMyCartScreen(),
       // ShoppingProfileScreen(),
-      OurElevatedButton(
-          title: "LOGOUT",
-          function: () {
-            Auth().logout();
-          })
+      Center(
+        child: OurElevatedButton(
+            title: "LOGOUT",
+            function: () async {
+              // print(sellerModel.name);
+              Auth().logout();
+            }),
+      )
     ];
     return Obx(() => GestureDetector(
           // onHorizontalDragEnd: (dragDetail) {
