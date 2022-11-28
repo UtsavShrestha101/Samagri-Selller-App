@@ -12,6 +12,7 @@ import '../controller/dashboard_controller.dart';
 import '../controller/delivery_time_controller.dart';
 import '../controller/explore_shop_controller.dart';
 import '../controller/login_location_controller.dart';
+import '../controller/my_seller_cart_controller.dart';
 import '../controller/polyline_controller.dart';
 import '../controller/product_names_list_controller.dart';
 import '../controller/search_text_controller.dart';
@@ -73,6 +74,9 @@ class MyBinding implements Bindings {
     );
     Get.lazyPut(
       () => MessageSendController(),
+    );
+    Get.lazyPut(
+      () => SellerCartController(),
     );
     // LoginLocationController
     // ShoppingListSearchController

@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyOrderRequestProduct {
-  final Timestamp requestedOn;
-  final String batchId;
+            final Timestamp requestedOn;
+            final String batchId;
   final String requestUserId;
   final String requestId;
   final String productId;
-  final double price;
-  final int quantity;
-  final String productImage;
+            final double price;
+            final int quantity;
+            final String productImage;
   final bool ispicked;
   final String productName;
 
