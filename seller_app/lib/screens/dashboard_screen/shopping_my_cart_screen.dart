@@ -24,6 +24,7 @@ import '../../models/firebase_user_model.dart';
 import '../../models/my_order_request_product.dart';
 import '../../utils/color.dart';
 import '../../widget/our_sized_box.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ShoppingMyCartScreen extends StatefulWidget {
   const ShoppingMyCartScreen({Key? key}) : super(key: key);
@@ -513,6 +514,24 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                                         ],
                                                       ),
                                                     ),
+                                                    OurSizedBox(),
+                                                    Text(
+                                                      timeago
+                                                          .format(
+                                                              myOrderRequestProduct
+                                                                  .requestedOn
+                                                                  .toDate())
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: ScreenUtil()
+                                                            .setSp(15),
+                                                        color: darklogoColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.justify,
+                                                    ),
                                                     myOrderRequestProduct
                                                                 .ispicked ==
                                                             false
@@ -917,6 +936,24 @@ class _ShoppingMyCartScreenState extends State<ShoppingMyCartScreen>
                                                           ),
                                                         ],
                                                       ),
+                                                    ),
+                                                    OurSizedBox(),
+                                                    Text(
+                                                      timeago
+                                                          .format(
+                                                              myOrderRequestProduct
+                                                                  .requestedOn
+                                                                  .toDate())
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: ScreenUtil()
+                                                            .setSp(15),
+                                                        color: darklogoColor,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.justify,
                                                     ),
                                                     myOrderRequestProduct
                                                                 .ispicked ==

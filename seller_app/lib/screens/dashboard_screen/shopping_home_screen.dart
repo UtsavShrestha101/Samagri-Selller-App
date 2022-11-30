@@ -13,6 +13,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/controller/category_tag_controller.dart';
 import 'package:myapp/db/db_helper.dart';
 import 'package:myapp/models/user_model.dart';
+import 'package:myapp/screens/dashboard_screen/shopping_notification_screen.dart';
 import 'package:myapp/screens/dashboard_screen/shopping_search_product_screen.dart';
 import 'package:myapp/services/current_location/get_current_location.dart';
 import 'package:myapp/services/phone_auth/phone_auth.dart';
@@ -105,6 +106,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
     );
     animationController.repeat(reverse: true);
   }
+  
 
   Future<void> showIntroData() async {
     await Future.delayed(
@@ -187,29 +189,6 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                         SizedBox(
                           width: ScreenUtil().setSp(12.5),
                         ),
-                        InkWell(
-                          onTap: () async {
-                            print("Hello World");
-                            DocumentSnapshot abc = await FirebaseFirestore
-                                .instance
-                                .collection("Sellers")
-                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                .get();
-                            UserModel userModel = UserModel.fromMap(abc);
-                            print(abc["name"]);
-                            print(userModel.location);
-                            print(userModel.lat);
-                            print(userModel.long);
-                            print("Utsav Shrestha111");
-
-                            _scaffoldKey.currentState!.openDrawer();
-                          },
-                          child: Icon(
-                            FeatherIcons.menu,
-                            color: logoColor,
-                            size: ScreenUtil().setSp(22.5),
-                          ),
-                        ),
                         Expanded(
                           child: Center(
                             child: Row(
@@ -239,8 +218,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                           ),
                         ),
                         IntroStepBuilder(
-                          order: 1,
-                          text: 'Explore products here',
+                          order: 2,
+                          text: 'Get your notifications from here',
                           borderRadius: BorderRadius.all(
                             Radius.circular(
                               ScreenUtil().setSp(50),
@@ -252,33 +231,11 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                               Navigator.push(
                                 context,
                                 PageTransition(
-                                  child: ShoppingSearchProductScreen(),
+                                  child: ShoppingNotificationScreen(),
                                   type: PageTransitionType.leftToRight,
                                 ),
                               );
-                            },
-                            child: Icon(
-                              FeatherIcons.search,
-                              color: logoColor,
-                              size: ScreenUtil().setSp(22.5),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: ScreenUtil().setSp(12.5),
-                        ),
-                        IntroStepBuilder(
-                          order: 2,
-                          text: 'Get your notifications from here',
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              ScreenUtil().setSp(50),
-                            ),
-                          ),
-                          builder: (context, key) => InkWell(
-                            key: key,
-                            onTap: () {
-                              Auth().logout();
+                              // Auth().logout();
                             },
                             child: RotationTransition(
                               turns: bellAnimation,
