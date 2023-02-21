@@ -106,7 +106,6 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
     );
     animationController.repeat(reverse: true);
   }
-  
 
   Future<void> showIntroData() async {
     await Future.delayed(
@@ -206,7 +205,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen>
                                   width: ScreenUtil().setSp(7.5),
                                 ),
                                 Text(
-                                  "Samagri-Seller",
+                                  "Go Mart: Seller",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: ScreenUtil().setSp(20.5),

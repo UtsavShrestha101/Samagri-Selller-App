@@ -482,92 +482,15 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              actions: [
-                // Hero(
-                //   tag: "Liked-${widget.heroTag}",
-                // child:
-                Padding(
-                  padding: EdgeInsets.only(
-                    right: ScreenUtil().setSp(15),
-                  ),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("All")
-                          .where("uid", isEqualTo: widget.productModel.uid)
-                          .snapshots(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          ProductModel productModel =
-                              ProductModel.fromMap(snapshot.data!.docs[0]);
-                          return productModel.favorite.contains(
-                                  FirebaseAuth.instance.currentUser!.uid)
-                              ? Hero(
-                                  tag: "Liked-${widget.heroTag}",
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: AnimatedBuilder(
-                                        animation: ButtomanimationController,
-                                        builder: (BuildContext context, _) {
-                                          return InkWell(
-                                            onTap: () async {
-                                              ButtomanimationController
-                                                  .forward();
-                                              await UserDetailFirestore()
-                                                  .removeFavorite(
-                                                      widget.productModel);
-                                            },
-                                            child: Icon(
-                                              MdiIcons.heart,
-                                              color: Colors.red,
-                                              size: sizeAnimation.value,
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                )
-                              : Hero(
-                                  tag: "NotLiked-${widget.heroTag}",
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: AnimatedBuilder(
-                                        animation: ButtomanimationController,
-                                        builder: (BuildContext context, _) {
-                                          return InkWell(
-                                            onTap: () async {
-                                              ButtomanimationController
-                                                  .reverse();
-                                              await UserDetailFirestore()
-                                                  .addFavorite(
-                                                      widget.productModel);
-                                            },
-                                            child: Icon(
-                                              MdiIcons.heartOutline,
-                                              color: Colors.grey.shade400,
-                                              size: sizeAnimation.value,
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                );
-                        } else {
-                          return Icon(Icons.favorite_border);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
             ),
             body: SafeArea(
-              child: SingleChildScrollView(
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: ScreenUtil().setSp(10),
-                    left: ScreenUtil().setSp(10),
-                    right: ScreenUtil().setSp(10),
-                  ),
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: ScreenUtil().setSp(10),
+                  left: ScreenUtil().setSp(10),
+                  right: ScreenUtil().setSp(10),
+                ),
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -612,23 +535,20 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                         ),
                       ),
                       OurSizedBox(),
-                      FadeTransition(
-                        opacity: fadeAnimation,
-                        child: Hero(
-                          tag: "NameTag-${widget.heroTag}",
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: Expanded(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  widget.productModel.name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0,
-                                    color: logoColor,
-                                    fontSize: ScreenUtil().setSp(20),
-                                  ),
+                      Hero(
+                        tag: "NameTag-${widget.heroTag}",
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Expanded(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(
+                                widget.productModel.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0,
+                                  color: logoColor,
+                                  fontSize: ScreenUtil().setSp(20),
                                 ),
                               ),
                             ),
@@ -636,281 +556,206 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                         ),
                       ),
                       OurSizedBox(),
-                      FadeTransition(
-                        opacity: fadeAnimation,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Hero(
-                                tag: "ShopName-${widget.heroTag}",
-                                // tag: "ShopName-$key",
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      DocumentSnapshot abc =
-                                          await FirebaseFirestore
-                                              .instance
-                                              .collection("Sellers")
-                                              .doc(FirebaseAuth
-                                                  .instance.currentUser!.uid)
-                                              .get();
-                                      UserModel userModel =
-                                          UserModel.fromMap(abc);
-                                      Navigator.push(
-                                        context,
-                                        PageTransition(
-                                          child: ShoppingShopProfileScreen(
-                                            userModel: userModel,
-                                            shopName:
-                                                widget.productModel.shop_name,
-                                            shopOwnerUID:
-                                                widget.productModel.ownerUid,
-                                          ),
-                                          type: PageTransitionType.leftToRight,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Hero(
+                              tag: "ShopName-${widget.heroTag}",
+                              // tag: "ShopName-$key",
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: InkWell(
+                                  onTap: () async {
+                                    DocumentSnapshot abc =
+                                        await FirebaseFirestore.instance
+                                            .collection("Sellers")
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .get();
+                                    UserModel userModel =
+                                        UserModel.fromMap(abc);
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        child: ShoppingShopProfileScreen(
+                                          userModel: userModel,
+                                          shopName:
+                                              widget.productModel.shop_name,
+                                          shopOwnerUID:
+                                              widget.productModel.ownerUid,
                                         ),
-                                      );
-                                      // print("Button Pressed");
-                                    },
-                                    child: Text(
-                                      widget.productModel.shop_name,
-                                      style: TextStyle(
-                                        color: darklogoColor,
-                                        fontSize: ScreenUtil().setSp(17.5),
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: 0,
+                                        type: PageTransitionType.leftToRight,
                                       ),
+                                    );
+                                    // print("Button Pressed");
+                                  },
+                                  child: Text(
+                                    widget.productModel.shop_name,
+                                    style: TextStyle(
+                                      color: darklogoColor,
+                                      fontSize: ScreenUtil().setSp(17.5),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  GiveRatingSheet(context);
-                                  print("Give review");
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: ScreenUtil().setSp(5),
-                                    vertical: ScreenUtil().setSp(5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: darklogoColor,
-                                    borderRadius: BorderRadius.circular(
-                                      ScreenUtil().setSp(10),
-                                    ),
-                                  ),
-                                  // color: Colors.red,
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: Center(
-                                      child: Text(
-                                        "Give review",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: ScreenUtil().setSp(17.5),
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: 0,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       OurSizedBox(),
-                      FadeTransition(
-                        opacity: fadeAnimation,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                // color: Colors.red,
-                                child: Hero(
-                                  tag: "Price-${widget.heroTag}",
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: Text(
-                                      "Rs. ${widget.productModel.price}",
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(17.5),
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: 0,
-                                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              // color: Colors.red,
+                              child: Hero(
+                                tag: "Price-${widget.heroTag}",
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    "Rs. ${widget.productModel.price}",
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17.5),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Hero(
-                                tag: "Rating-${widget.heroTag}",
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: StreamBuilder(
-                                    stream: FirebaseFirestore.instance
-                                        .collection("All")
-                                        .where("uid",
-                                            isEqualTo: widget.productModel.uid)
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot snapshot) {
-                                      if (snapshot.hasData) {
-                                        ProductModel productModel1 =
-                                            ProductModel.fromMap(
-                                                snapshot.data!.docs[0]);
-                                        return InkWell(
-                                          onTap: () async {
-                                            if (productModel1.ratingUID
-                                                .contains(FirebaseAuth.instance
-                                                    .currentUser!.uid)) {
-                                              var a = await FirebaseFirestore
-                                                  .instance
-                                                  .collection("Rating")
-                                                  .doc(productModel1.uid)
-                                                  .collection("Ratings")
-                                                  .doc(FirebaseAuth.instance
-                                                      .currentUser!.uid)
-                                                  .get();
-                                              print(
-                                                  "Here is the rating details");
-                                              print(a);
-                                              var rate = a.data()!["rating"];
-                                              _showMyDialog(rate, true);
-                                            } else {
-                                              _showMyDialog(0.0, false);
-                                            }
-                                          },
-                                          child: Row(
-                                            children: [
-                                              RatingStars(
-                                                value: productModel1.rating
-                                                    .toDouble(),
-                                                starBuilder: (index, color) =>
-                                                    Icon(
-                                                  Icons.star,
-                                                  color: color,
-                                                  size: ScreenUtil().setSp(17),
-                                                ),
-                                                starCount: 5,
-                                                starSize:
-                                                    ScreenUtil().setSp(17.5),
-                                                valueLabelColor:
-                                                    const Color(0xff9b9b9b),
-                                                valueLabelTextStyle: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontStyle: FontStyle.normal,
-                                                  fontSize:
-                                                      ScreenUtil().setSp(13.5),
-                                                ),
-                                                valueLabelRadius:
-                                                    ScreenUtil().setSp(20),
-                                                maxValue: 5,
-                                                starSpacing: 1,
-                                                maxValueVisibility: true,
-                                                valueLabelVisibility: true,
-                                                animationDuration:
-                                                    const Duration(
-                                                        milliseconds: 800),
-                                                valueLabelPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical:
-                                                      ScreenUtil().setSp(7.5),
-                                                  horizontal:
-                                                      ScreenUtil().setSp(7.5),
-                                                ),
-                                                valueLabelMargin:
-                                                    EdgeInsets.only(
-                                                  right: ScreenUtil().setSp(3),
-                                                ),
-                                                starOffColor: Colors.white,
-                                                starColor: darklogoColor,
-                                              ),
-                                              Text(
-                                                "(${productModel1.ratingNo.toString()})",
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      ScreenUtil().setSp(13),
-                                                  fontWeight: FontWeight.w500,
-                                                  color: darklogoColor,
-                                                ),
-                                              ),
-                                            ],
+                          ),
+                          Expanded(
+                            child: Hero(
+                              tag: "Rating-${widget.heroTag}",
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("All")
+                                      .where("uid",
+                                          isEqualTo: widget.productModel.uid)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      ProductModel productModel1 =
+                                          ProductModel.fromMap(
+                                              snapshot.data!.docs[0]);
+                                      return Row(
+                                        children: [
+                                          RatingStars(
+                                            value:
+                                                productModel1.rating.toDouble(),
+                                            starBuilder: (index, color) => Icon(
+                                              Icons.star,
+                                              color: color,
+                                              size: ScreenUtil().setSp(17),
+                                            ),
+                                            starCount: 5,
+                                            starSize: ScreenUtil().setSp(17.5),
+                                            valueLabelColor:
+                                                const Color(0xff9b9b9b),
+                                            valueLabelTextStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize:
+                                                  ScreenUtil().setSp(13.5),
+                                            ),
+                                            valueLabelRadius:
+                                                ScreenUtil().setSp(20),
+                                            maxValue: 5,
+                                            starSpacing: 1,
+                                            maxValueVisibility: true,
+                                            valueLabelVisibility: true,
+                                            animationDuration: const Duration(
+                                                milliseconds: 800),
+                                            valueLabelPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical: ScreenUtil().setSp(7.5),
+                                              horizontal:
+                                                  ScreenUtil().setSp(7.5),
+                                            ),
+                                            valueLabelMargin: EdgeInsets.only(
+                                              right: ScreenUtil().setSp(3),
+                                            ),
+                                            starOffColor: Colors.white,
+                                            starColor: darklogoColor,
                                           ),
-                                        );
-                                      } else {
-                                        return Row(
-                                          children: [
-                                            RatingStars(
-                                              value: widget.productModel.rating
-                                                  .toDouble(),
-                                              starBuilder: (index, color) =>
-                                                  Icon(
-                                                Icons.star,
-                                                color: color,
-                                                size: ScreenUtil().setSp(17),
-                                              ),
-                                              starCount: 5,
-                                              starSize:
-                                                  ScreenUtil().setSp(17.5),
-                                              valueLabelColor:
-                                                  const Color(0xff9b9b9b),
-                                              valueLabelTextStyle: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400,
-                                                fontStyle: FontStyle.normal,
-                                                fontSize:
-                                                    ScreenUtil().setSp(13.5),
-                                              ),
-                                              valueLabelRadius:
-                                                  ScreenUtil().setSp(20),
-                                              maxValue: 5,
-                                              starSpacing: 1,
-                                              maxValueVisibility: true,
-                                              valueLabelVisibility: true,
-                                              animationDuration: const Duration(
-                                                  milliseconds: 800),
-                                              valueLabelPadding:
-                                                  EdgeInsets.symmetric(
-                                                vertical:
-                                                    ScreenUtil().setSp(7.5),
-                                                horizontal:
-                                                    ScreenUtil().setSp(7.5),
-                                              ),
-                                              valueLabelMargin: EdgeInsets.only(
-                                                right: ScreenUtil().setSp(3),
-                                              ),
-                                              starOffColor: Colors.white,
-                                              starColor: darklogoColor,
+                                          Text(
+                                            "(${productModel1.ratingNo.toString()})",
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(13),
+                                              fontWeight: FontWeight.w500,
+                                              color: darklogoColor,
                                             ),
-                                            Text(
-                                              "(${widget.productModel.ratingNo.toString()})",
-                                              style: TextStyle(
-                                                fontSize:
-                                                    ScreenUtil().setSp(13),
-                                                fontWeight: FontWeight.w500,
-                                                color: darklogoColor,
-                                              ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Row(
+                                        children: [
+                                          RatingStars(
+                                            value: widget.productModel.rating
+                                                .toDouble(),
+                                            starBuilder: (index, color) => Icon(
+                                              Icons.star,
+                                              color: color,
+                                              size: ScreenUtil().setSp(17),
                                             ),
-                                          ],
-                                        );
-                                      }
-                                    },
-                                  ),
+                                            starCount: 5,
+                                            starSize: ScreenUtil().setSp(17.5),
+                                            valueLabelColor:
+                                                const Color(0xff9b9b9b),
+                                            valueLabelTextStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize:
+                                                  ScreenUtil().setSp(13.5),
+                                            ),
+                                            valueLabelRadius:
+                                                ScreenUtil().setSp(20),
+                                            maxValue: 5,
+                                            starSpacing: 1,
+                                            maxValueVisibility: true,
+                                            valueLabelVisibility: true,
+                                            animationDuration: const Duration(
+                                                milliseconds: 800),
+                                            valueLabelPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical: ScreenUtil().setSp(7.5),
+                                              horizontal:
+                                                  ScreenUtil().setSp(7.5),
+                                            ),
+                                            valueLabelMargin: EdgeInsets.only(
+                                              right: ScreenUtil().setSp(3),
+                                            ),
+                                            starOffColor: Colors.white,
+                                            starColor: darklogoColor,
+                                          ),
+                                          Text(
+                                            "(${widget.productModel.ratingNo.toString()})",
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(13),
+                                              fontWeight: FontWeight.w500,
+                                              color: darklogoColor,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       OurSizedBox(),
                       ReadMoreText(
@@ -936,258 +781,8 @@ class _ShoppingProductScreenState extends State<ShoppingProductScreen>
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      OurSizedBox(),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil().setSp(10),
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            ScreenUtil().setSp(20),
-                          ),
-                        ),
-                        child: StreamBuilder<
-                            DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: FirebaseFirestore.instance
-                              .collection("Users")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<
-                                      DocumentSnapshot<Map<String, dynamic>>>
-                                  snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.exists) {
-                                // FirebaseUserModel firebaseUserModel =
-                                //     FirebaseUserModel.fromMap(
-                                //         snapshot.data!.data()!);
-                                return Container(
-                                  child: Row(
-                                    children: [
-                                      AnimatedBuilder(
-                                        animation: cartController,
-                                        builder: (BuildContext context, _) {
-                                          return Stack(
-                                            children: [
-                                              FxContainer(
-                                                height: ScreenUtil().setSp(50),
-                                                child: Icon(
-                                                  FeatherIcons.shoppingBag,
-                                                  color: darklogoColor,
-                                                  // color: theme.colorScheme.primary,
-                                                  size: cartAnimation.value,
-                                                ),
-                                                color:
-                                                    logoColor.withOpacity(0.2),
-                                                // paddingAll:
-                                                //     controller.paddingAnimation.value,
-                                              ),
-                                              Positioned(
-                                                right: 5,
-                                                top: 4,
-                                                child: FxContainer.rounded(
-                                                  child: Text(
-                                                    "aa",
-                                                    // firebaseUserModel.cartItemNo
-                                                    //     .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: ScreenUtil()
-                                                          .setSp(12.5),
-                                                      color: darklogoColor,
-                                                    ),
-                                                    // "1",
-                                                    // color: theme.colorScheme.onPrimary,
-                                                    // fontSize: 8,
-                                                    // fontWeight: 700,
-                                                  ),
-                                                  paddingAll: 4,
-                                                ),
-                                              )
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(
-                                        width: ScreenUtil().setSp(20),
-                                      ),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () async {
-                                            // if (firebaseUserModel.cartItems
-                                            //     .contains(
-                                            //         widget.productModel.uid)) {
-                                            //   cartController.reverse();
-                                            //   await ProductDetailFirestore()
-                                            //       .removeItemFromCart(
-                                            //           firebaseUserModel,
-                                            //           widget.productModel);
-                                            // } else {
-                                            //   cartController.forward();
-                                            //   await ProductDetailFirestore()
-                                            //       .addItemToCart(
-                                            //           firebaseUserModel,
-                                            //           widget.productModel,
-                                            //           1);
-                                            // }
-                                          },
-                                          child: Container(
-                                            height: ScreenUtil().setSp(40),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  ScreenUtil().setSp(10),
-                                              vertical: ScreenUtil().setSp(
-                                                5,
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: logoColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                ScreenUtil().setSp(10),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                // firebaseUserModel.cartItems
-                                                //         .contains(widget
-                                                //             .productModel.uid)
-                                                //     ? "Remove from cart"
-                                                //     :
-                                                "Add to cart",
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      ScreenUtil().setSp(20),
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                // if (firebaseUserModel.cartItems
-                                //     .contains(widget.productModel.uid)) {
-                                //   return OurElevatedButton(
-                                //     title: "Remove from cart",
-                                // function: () async {
-                                // await ProductDetailFirestore()
-                                //     .removeItemFromCart(firebaseUserModel,
-                                //         widget.productModel);
-                                //     },
-                                //   );
-                                // } else {
-                                //   return Row(
-                                //     children: [
-                                //       Row(
-                                //         children: [
-                                //           SizedBox(
-                                //             width: ScreenUtil().setSp(50),
-                                //             child: ElevatedButton(
-                                //               style: ButtonStyle(
-                                //                 padding:
-                                //                     MaterialStateProperty.all(
-                                //                   EdgeInsets.zero,
-                                //                 ),
-                                //                 backgroundColor:
-                                //                     MaterialStateProperty.all(
-                                //                   logoColor,
-                                //                 ),
-                                //               ),
-                                //               onPressed: () {
-                                //                 if (Get.find<
-                                //                             QuantityController>()
-                                //                         .quantity >
-                                //                     1) {
-                                //                   Get.find<QuantityController>()
-                                //                       .changeQuantity(Get.find<
-                                //                                   QuantityController>()
-                                //                               .quantity
-                                //                               .value -
-                                //                           1);
-                                //                 }
-                                //               },
-                                //               child: Icon(
-                                //                 Icons.remove,
-                                //                 size: ScreenUtil().setSp(25),
-                                //               ),
-                                //             ),
-                                //           ),
-                                //           SizedBox(
-                                //             width: ScreenUtil().setSp(5),
-                                //           ),
-                                //           Obx(
-                                //             () => Text(
-                                //               Get.find<QuantityController>()
-                                //                   .quantity
-                                //                   .toString(),
-                                //               style: TextStyle(
-                                //                 fontSize:
-                                //                     ScreenUtil().setSp(20),
-                                //               ),
-                                //             ),
-                                //           ),
-                                //           SizedBox(
-                                //             width: ScreenUtil().setSp(5),
-                                //           ),
-                                //           SizedBox(
-                                //             width: ScreenUtil().setSp(50),
-                                //             child: ElevatedButton(
-                                //               style: ButtonStyle(
-                                //                 padding:
-                                //                     MaterialStateProperty.all(
-                                //                   EdgeInsets.zero,
-                                //                 ),
-                                //                 backgroundColor:
-                                //                     MaterialStateProperty.all(
-                                //                   logoColor,
-                                //                 ),
-                                //               ),
-                                //               onPressed: () {
-                                //                 Get.find<QuantityController>()
-                                //                     .changeQuantity(Get.find<
-                                //                                 QuantityController>()
-                                //                             .quantity
-                                //                             .value +
-                                //                         1);
-                                //               },
-                                //               child: Icon(
-                                //                 Icons.add,
-                                //                 size: ScreenUtil().setSp(25),
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         ],
-                                //       ),
-                                //       SizedBox(
-                                //         width: ScreenUtil().setSp(30),
-                                //       ),
-                                //       Expanded(
-                                //         child: OurElevatedButton(
-                                //           title: "Add to cart",
-                                //           function: () async {
-                                // await ProductDetailFirestore()
-                                //     .addItemToCart(
-                                //         firebaseUserModel,
-                                //         widget.productModel,
-                                //         Get.find<
-                                //                 QuantityController>()
-                                //             .quantity
-                                //             .value);
-                                //           },
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   );
-                                // }
-                              }
-                            }
-                            return Container();
-                          },
-                        ),
-                      ),
+                      OurSizedBox()
+
                       // OurRecommendationWidget(
                       //   productUIDhide: widget.productModel.uid,
                       // ),
