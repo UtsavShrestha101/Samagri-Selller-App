@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Hero(
               tag: "Samagri-Seller",
               child: Text(
-                "Samagri-Seller",
+                "Go Mart: Seller",
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(35),
                   fontWeight: FontWeight.w600,
